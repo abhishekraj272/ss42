@@ -422,7 +422,10 @@ class CommentViewSet(viewsets.ModelViewSet):
 class ForServicePostViewSet(viewsets.ModelViewSet):
     close_old_connections()
     queryset = Post.objects.all()
-    search_fields = ('url','tags','review')
+
+    search_fields = ['tags']
+
+    # search_fields = ('url','tags','review')
     serializer_class = PostSerializer_read
     http_method_names = ['get']
     filter_backends = (filters.SearchFilter,)
