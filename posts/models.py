@@ -35,7 +35,7 @@ class Post(models.Model):
     review=models.CharField(max_length=250,null=True,blank=True)
     url=models.URLField(null=True,blank=True)
     voters = models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name="post_voters")
-    tags = TaggableManager(blank=True)
+    tags = TaggableManager(blank=False)
     comments=models.ManyToManyField('Comment',blank=True,related_name="comments_post")
     anonymous = models.BooleanField(default=False, blank=True)
     fake = models.BooleanField(default=False, blank=True)
@@ -43,6 +43,7 @@ class Post(models.Model):
     genuine = models.ManyToManyField(settings.AUTH_USER_MODEL , blank=True, related_name="post_genuines")
     spam = models.ManyToManyField(settings.AUTH_USER_MODEL , blank=True, related_name="post_spames")
     advertisement=models.ForeignKey(PostAdvertisment,on_delete=models.CASCADE,null=True,blank=True,related_name="postadvertisement")
+
 
 
 

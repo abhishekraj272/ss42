@@ -69,13 +69,19 @@ class PostAdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model=PostAdvertisment
         fields='__all__'
+
+class StringListField(serializers.ListField): # get from http://www.django-rest-framework.org/api-guide/fields/#listfield
+    child = serializers.CharField()
+
+    def to_representation(self, data):
+        return ' '.join(data.values_list('name', flat=True))
 class PostSerializer(TaggitSerializer,serializers.ModelSerializer):
-    tags = TagListSerializerField(required=True)
+    tags = StringListField()
+   
     author = serializers.StringRelatedField(read_only=True)
     comments = CommentSerializer(many=True, required=False, read_only=True)
-    # title = serializers.CharField()
-
     advertisement = PostAdvertisementSerializer()
+
     # advertisement = serializers.SlugRelatedField(
     #     queryset=PostAdvertisment.objects.all(),   
     #     slug_field='advertisement'
@@ -101,6 +107,10 @@ class PostSerializer(TaggitSerializer,serializers.ModelSerializer):
     #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers) 
     def create(self,validated_data):
         validated_data["advertisement"] = PostAdvertisment.objects.create(**validated_data["advertisement"])
+        tags = validated_data.pop('tags')
+        instance = super(PostSerializer, self).create(validated_data)
+        instance.tags.set(*tags)
+        return instance
         post = Post.objects.create(**validated_data)
         return post
 
@@ -128,7 +138,7 @@ class PostSerializer(TaggitSerializer,serializers.ModelSerializer):
         return instance.voters.filter(pk=request.user.pk).exists()
 
 class PostSerializer_read(TaggitSerializer,serializers.ModelSerializer):
-    tags = TagListSerializerField(required=False)
+    tags = TagListSerializerField(required=False,read_only=True)
     author = serializers.SerializerMethodField(method_name='get_user_type')
     comments = CommentSerializer(many=True, required=False)
     # advertisement=serializers.ReadOnlyField(read_only=True)
