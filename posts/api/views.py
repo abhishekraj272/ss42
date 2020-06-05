@@ -34,12 +34,14 @@ from django.http import HttpResponse, JsonResponse
 from objects.models import Profile
 
 from rest_framework_api_key.permissions import HasAPIKey  # Permission for API Key check
+from django.views.decorators.csrf import csrf_exempt
 
 # from rest_framework.responseim
 # class UserViewSet(viewsets.ModelViewSet):
 #     queryset = User.objects.all()
 #     # lookup_field="id"
 #     serializer_class=Suser
+@csrf_exempt
 def vote_post(request, pid, uid, query):
     if query == 'upvote':
         post = Post.objects.get(id=pid)
@@ -115,7 +117,7 @@ def vote_post(request, pid, uid, query):
         }
 
         return JsonResponse(payload)
-
+@csrf_exempt
 def vote_img(request, pid, uid, query):
     if query == 'upvote':
         img = Img.objects.get(id=pid)
@@ -191,7 +193,7 @@ def vote_img(request, pid, uid, query):
         }
 
         return JsonResponse(payload)
-
+@csrf_exempt
 def vote_msg(request, pid, uid, query):
     if query == 'upvote':
         msg = Message.objects.get(id=pid)
@@ -269,7 +271,6 @@ def vote_msg(request, pid, uid, query):
 
         return JsonResponse(payload)
 
-
 class SortedPostViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
@@ -312,7 +313,6 @@ class SortedPostViewSet(viewsets.ModelViewSet):
     serializer_class=Spost
     permission_classes =[IsAuthenticatedOrReadOnly,IsAuthorOrReadOnly, HasAPIKey]
     authentication_classes =(TokenAuthentication,JSONWebTokenAuthentication)
-
 class SortedMessageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
@@ -356,7 +356,6 @@ class SortedMessageViewSet(viewsets.ModelViewSet):
     permission_classes =[IsAuthenticatedOrReadOnly,IsAuthorOrReadOnly, HasAPIKey]
     authentication_classes =(TokenAuthentication,JSONWebTokenAuthentication)
 
-
 class SortedImageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
@@ -399,7 +398,6 @@ class SortedImageViewSet(viewsets.ModelViewSet):
     serializer_class=ImgSerializer
     permission_classes =[IsAuthenticatedOrReadOnly,IsAuthorOrReadOnly, HasAPIKey]
     authentication_classes =(TokenAuthentication,JSONWebTokenAuthentication)
-
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -429,7 +427,7 @@ class ForServicePostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer_read
     http_method_names = ['get']
     filter_backends = (filters.SearchFilter,)
-    permission_classes =[HasAPIKey]
+    permission_classes =[IsAuthorOrReadOnly,IsAuthenticatedOrReadOnly]
     authentication_classes =(TokenAuthentication,JSONWebTokenAuthentication)
     close_old_connections()
 
@@ -464,7 +462,6 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self,serializer):
         serializer.save(author=self.request.user)
     close_old_connections()
-
 class FakePostViewSet(viewsets.ModelViewSet):
     close_old_connections()
     # lookup_field="id"
@@ -489,7 +486,6 @@ class ForServiceImgViewSet(viewsets.ModelViewSet):
     permission_classes =[HasAPIKey]
     authentication_classes =(TokenAuthentication,JSONWebTokenAuthentication)
     close_old_connections()
-
 class ImgViewSet(viewsets.ModelViewSet):
     parser_class = (FileUploadParser,)
     permission_classes =[IsAuthenticatedOrReadOnly,IsAuthorOrReadOnly, HasAPIKey]
@@ -505,7 +501,6 @@ class ImgViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=serializer.context['request'].user)
-
 class FakeImgViewSet(viewsets.ModelViewSet):
     close_old_connections()
     # lookup_field="id"
@@ -520,7 +515,6 @@ class FakeImgViewSet(viewsets.ModelViewSet):
 
     close_old_connections()
 
-
 class ForServiceMsgViewSet(viewsets.ModelViewSet):
     close_old_connections()
     search_fields = ['url']
@@ -531,7 +525,6 @@ class ForServiceMsgViewSet(viewsets.ModelViewSet):
     permission_classes =[HasAPIKey]
     authentication_classes =(TokenAuthentication,JSONWebTokenAuthentication)
     close_old_connections()
-
 
 class FakeMsgViewSet(viewsets.ModelViewSet):
     close_old_connections()
@@ -546,7 +539,6 @@ class FakeMsgViewSet(viewsets.ModelViewSet):
         return  Message.objects.filter(fake=True)
 
     close_old_connections()
-
 class MsgViewSet(viewsets.ModelViewSet):
     close_old_connections()
     # parser_class = (FileUploadParser,)
@@ -625,7 +617,6 @@ class MsgViewSet(viewsets.ModelViewSet):
 #     authentication_classes =(TokenAuthentication,)
 
 # class PostRUDView(generics.RetrieveUpdateDestroyAPIView):
-
 class PostRUDView(generics.RetrieveUpdateDestroyAPIView):
     queryset=Post.objects.all()
     serializer_class=Spost
@@ -683,6 +674,7 @@ class userView(mixins.RetrieveModelMixin,ListAPIView):
 # class Postsnippet(viewsets.ModelViewSet):
 #     serializer_class=Spost
 #     queryset= Post.objects.all()
+@csrf_exempt
 @api_view(["GET","POST"])
 def api_get_create(request):
 
@@ -698,7 +690,7 @@ def api_get_create(request):
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
+@csrf_exempt
 @api_view(["GET","PUT","DELETE"])
 def api_delete(request,pk):
     # post=Post.objects.filter(pk=pk)
