@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'objects',
     'notification',
     'developer',
+    'company',
     'payments.apps.PaymentsConfig',
 
     ##packages
