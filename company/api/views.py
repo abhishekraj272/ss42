@@ -18,6 +18,25 @@ from posts.models import Post
 
 generic_emails = ['gmail', 'yahoo', 'rediff', 'outlook', 'yandex', 'aol', 'gmx', ]
 
+class CompanyRead(viewsets.ModelViewSet):
+    permission_classes =[HasAPIKey, ]
+    authentication_classes =()
+    serializer_class = CompanySerializer
+    queryset = Company.objects.all()
+    http_method_names = ['get']
+
+    def get_queryset(self):
+        key = self.request.META['HTTP_API_KEY']
+        company = APIKey.objects.get_from_key(key)
+        return self.queryset.filter(company_name=company)
+
+    # def list(self, request, *args, **kwargs):
+
+    #     key = request.META['HTTP_API_KEY']
+    #     company = APIKey.objects.get_from_key(key)
+    #     return Response({ "detail": "Method \"GET\" not allowed..." }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
 class Company(viewsets.ModelViewSet):
     permission_classes =[]
     authentication_classes =()
@@ -35,17 +54,20 @@ class Company(viewsets.ModelViewSet):
             return Response({ "detail": "Please register with your company email !!" }, status=status.HTTP_403_FORBIDDEN)
 
         self.request.data["company_name"] = company_name
-        api_key, key = APIKey.objects.create_key(name=self.request.data['company_name'])
-        self.request.data["api_key"] = str(key)
+
+        if  self.queryset.filter(company_name=company_name):
+            print(True)
+            self.request.data["api_key"] = self.queryset.filter(company_name=company_name)[0].api_key
+        else:
+            print(False)
+            api_key, key = APIKey.objects.create_key(name=self.request.data['company_name'])
+            self.request.data["api_key"] = str(key)
         # serializer = self.get_serializer(data=request.data)
         serializer = CompanySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def list(self, request, *args, **kwargs):
-        return Response({ "detail": "Method \"GET\" not allowed..." }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 class PostViewSet(viewsets.ModelViewSet):
     close_old_connections()
