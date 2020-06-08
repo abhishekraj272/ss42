@@ -72,6 +72,8 @@ class Company(viewsets.ModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
     close_old_connections()
     queryset = Post.objects.all()
+    filter_backends = (filters.SearchFilter,)
+
     search_fields = ['url']
     permission_classes =[HasAPIKey, ]
     authentication_classes =()
