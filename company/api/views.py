@@ -15,6 +15,7 @@ from company.api.serializers import CompanySerializer, CompanySerializer_read   
 from posts.api.serializers import PostSerializer_read
 from company.models import Company                                                  # Importing models
 from posts.models import Post
+from rest_framework import filters
 
 generic_emails = ['gmail', 'yahoo', 'rediff', 'outlook', 'yandex', 'aol', 'gmx', ]
 
