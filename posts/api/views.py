@@ -445,7 +445,7 @@ class PostViewSet(viewsets.ModelViewSet):
             return PostSerializer_read
         else:
             return PostSerializer
-
+    @csrf_exempt
     def create(self, request):
         url = request.data.get('url')
         author = str(request.user)
@@ -458,7 +458,7 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response({"details" : "Review already exists ! "}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return super(PostViewSet, self).create(request)
-
+    @csrf_exempt
     def perform_create(self,serializer):
         serializer.save(author=self.request.user)
     close_old_connections()
