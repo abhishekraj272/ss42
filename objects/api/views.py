@@ -52,7 +52,7 @@ class UserPostProfile(viewsets.ViewSet):
 
 class PostListUser(generics.ListAPIView, APIView):
     serializer_class = UserDetailSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, HasAPIKey]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes =(JSONWebTokenAuthentication,TokenAuthentication)
 
     def get_queryset(self):
