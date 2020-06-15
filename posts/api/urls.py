@@ -18,7 +18,9 @@ from django.conf.urls.static import static
 
 router = DefaultRouter()
 
+
 router.register(r'post', views.PostViewSet)
+router.register(r'post/<int:pk>/',views.PostViewSet)
 router.register(r'msg', views.MsgViewSet)
 router.register(r'img', views.ImgViewSet)
 

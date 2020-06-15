@@ -47,6 +47,7 @@ urlpatterns = [
     path('a/', include('ss.api.urls')),
 
     path('api/payment/', include('payments.api.urls')),
+    path('api/verify/', include('accounts.urls'))
 
 
     # path('api/rest-auth/registration/', include('rest_auth.registration.urls')),

@@ -3,7 +3,7 @@ from posts.models import Post,Message,Comment,Img,PostAdvertisment
 from django.contrib.auth.models import User
 from taggit_serializer.serializers import (TagListSerializerField,
                                            TaggitSerializer)
-
+from django.http import HttpResponse
 #########
 # class Suser(serializers.ModelSerializer):
 #     class Meta:
@@ -113,7 +113,13 @@ class PostSerializer(TaggitSerializer,serializers.ModelSerializer):
         return instance
         post = Post.objects.create(**validated_data)
         return post
+    def update(self, instance, validated_data):
+    
+        # Update the  instance
+        instance.review = validated_data['review']
+        instance.save()
 
+        return instance
 
         # advertisement=validated_data.pop('advertisement')
         # post = Post.objects.create(**validated_data)

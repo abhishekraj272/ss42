@@ -23,6 +23,7 @@ from rest_framework.decorators import action
 from django.contrib.auth.models import User
 from developer.models import Developers
 from posts.models import Post
+from rest_framework import mixins
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
@@ -432,7 +433,7 @@ class ForServicePostViewSet(viewsets.ModelViewSet):
     close_old_connections()
 
 
-class PostViewSet(viewsets.ModelViewSet):
+class PostViewSet(viewsets.ModelViewSet,mixins.UpdateModelMixin):
     close_old_connections()
     queryset = Post.objects.all()
     search_fields = ['url']
@@ -461,6 +462,19 @@ class PostViewSet(viewsets.ModelViewSet):
     @csrf_exempt
     def perform_create(self,serializer):
         serializer.save(author=self.request.user)
+    # def update(self, instance, validated_data):
+    #     # Update the  instance
+    #     instance.review = validated_data['review']
+    #     instance.save()       
+    # def put(self, request, *args, **kwargs):
+    #     return self.update(request, *args, **kwargs)       
+    # def put(self, request, pk, format=None):
+    #     snippet = Post.objects.get(pk)
+    #     serializer = PostSerializer(snippet, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     close_old_connections()
 class FakePostViewSet(viewsets.ModelViewSet):
     close_old_connections()
