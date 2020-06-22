@@ -12,5 +12,10 @@ class Company(models.Model):
     api_key = models.TextField(max_length=1024, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    is_verified = models.BooleanField(default=False)
+
+    otp = models.CharField(max_length=30, blank=True)
+    otp_created = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.dev_name
