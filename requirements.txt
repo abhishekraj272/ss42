@@ -16,7 +16,7 @@ curl==0.0.1
 daphne==2.4.0
 defusedxml==0.6.0
 dj-database-url==0.5.0
-Django==3.0
+Django==2.2.3
 django-allauth==0.41.0
 django-braces==1.14.0
 django-cors-headers==3.2.1
@@ -66,3 +66,11 @@ txaio==18.8.1
 urllib3==1.25.7
 whitenoise==5.0.1
 zope.interface==4.7.1
+django-webpack-loader
+djangorestframework-api-key
+django-rest-auth
+django-taggit-serializer
+django-taggit
+oauth2_provider
+social-auth-app-django
+stripe
