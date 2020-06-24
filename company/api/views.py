@@ -16,6 +16,7 @@ from posts.api.serializers import PostSerializer_read
 from company.models import Company                                                  # Importing models
 from posts.models import Post
 from rest_framework import filters
+import grequests
 
 generic_emails = ['gmail', 'yahoo', 'rediff', 'outlook', 'yandex', 'aol', 'gmx', ]
 
@@ -68,6 +69,7 @@ class Company(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
+        grequests.get(f'https://backend.scrapshut.com/api/verify/company/create/{serializer.data["id"]}')
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class PostViewSet(viewsets.ModelViewSet):
