@@ -5,7 +5,7 @@ class CompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Company
-       fields = ('dev_name', 'email', 'city', 'country', 'description', 'password')
+        fields = ('id', 'dev_name', 'email', 'city', 'country', 'description', 'password')
         # fields = '__all__'
         extra_kwargs = {
             'password': {'write_only': True}

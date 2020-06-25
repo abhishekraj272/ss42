@@ -1,4 +1,4 @@
-from .views import create_verification, confirm_verification
+from .views import create_verification, confirm_verification, company_generate_otp, company_otp_verify
 from django.urls import path
 
 urlpatterns = [
