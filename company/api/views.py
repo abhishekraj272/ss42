@@ -70,6 +70,7 @@ class Company(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
+        
         try:
             user = User.objects.create_user(self.request.data["dev_name"], self.request.data["email"], self.request.data["password"])
         except Exception as e:
