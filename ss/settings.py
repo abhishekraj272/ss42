@@ -388,8 +388,8 @@ STRIPE_SECRET_KEY = 'sk_test_3Pb9X37KdBDhfngkRjHlNJpi'
 STRIPE_PUBLISHABLE_KEY = 'pk_test_Ao1LPddyrUcCYfsWrzJYxzbA'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'email-smtp.ap-south-1.amazonaws.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'pythonautomail1@gmail.com'
-EMAIL_HOST_PASSWORD = 'qwerty1uiop'
+EMAIL_HOST_USER = 'AKIAZ2L3GYCDLZHOOO4K'
+EMAIL_HOST_PASSWORD = 'BFP1tNN0GDoST9HEwAhhf2Wkk1+SkQ87F3+PP2bjKTaH'
