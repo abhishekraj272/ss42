@@ -42,6 +42,7 @@ CORS_ALLOW_HEADERS = (
         'x-csrftoken',
         'api-key',
         'API-KEY',
+        'Access-Control-Allow-Origin',
 )
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
