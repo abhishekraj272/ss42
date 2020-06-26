@@ -32,7 +32,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #     'https://wiringbridge.com',
 # ]
 CORS_ORIGIN_ALLOW_ALL=True
-
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = (
         'x-requested-with',
         'content-type',
