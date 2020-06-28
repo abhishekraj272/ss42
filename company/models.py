@@ -11,6 +11,6 @@ class Company(models.Model):
     description = models.TextField(max_length=1024, null=False)
     api_key = models.TextField(max_length=1024, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-
+    url=models.TextField(blank=True,null=True)
     def __str__(self):
         return self.dev_name

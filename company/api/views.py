@@ -7,9 +7,10 @@ from rest_framework_api_key.permissions import HasAPIKey
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.http import JsonResponse, HttpResponse
 from rest_framework import status
-
+from rest_framework import mixins
 from rest_framework_api_key.models import APIKey
 from django.db import close_old_connections
+from django.shortcuts import get_object_or_404
 
 from company.api.serializers import CompanySerializer, CompanySerializer_read       # Importing serializer
 from posts.api.serializers import PostSerializer_read
@@ -38,7 +39,7 @@ class CompanyRead(viewsets.ModelViewSet):
     #     return Response({ "detail": "Method \"GET\" not allowed..." }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-class Company(viewsets.ModelViewSet):
+class Company(viewsets.ModelViewSet,mixins.UpdateModelMixin,):
     permission_classes =[]
     authentication_classes =()
     serializer_class = CompanySerializer_read
@@ -70,6 +71,16 @@ class Company(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)   
+    # def put(self, request, pk=None, format=None):
+    #     snippet  = Company.objects.filter(pk=pk)
+    #     serializer = CompanySerializer_read(snippet, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+        # return Response({"method":"put"})
 class PostViewSet(viewsets.ModelViewSet):
     close_old_connections()
     queryset = Post.objects.all()

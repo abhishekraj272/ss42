@@ -10,10 +10,18 @@ class CompanySerializer(serializers.ModelSerializer):
         # extra_kwargs={
         #     'password':{'write_only'=True}
         # }
+    def update(self, instance, validated_data):
+    
+        # Update the  instance
+        instance.url = validated_data['url']
+        instance.save()
+
+        return instance     
 
 class CompanySerializer_read(serializers.ModelSerializer):
 
     class Meta:
         model = Company
-        fields = ('dev_name', 'email', 'city', 'country', 'description')
+        fields = ('dev_name', 'email', 'city', 'country', 'description','url','api_key')
         # fields = '__all__'
+ 
