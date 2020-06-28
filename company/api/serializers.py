@@ -2,26 +2,14 @@ from rest_framework import serializers
 from company.models import Company
 
 class CompanySerializer(serializers.ModelSerializer):
-    # password2=serializers.CharField(style={'input_type':'password'},write_only=True)
+    company_name = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Company
-        # fields = ('dev_name', 'email', 'city', 'country', 'description')
+        # fields = ('company_name', 'dev_name', 'email', 'city', 'country', 'description', 'company_name', 'api_key')
         fields = '__all__'
-        # extra_kwargs={
-        #     'password':{'write_only'=True}
-        # }
-    def update(self, instance, validated_data):
-    
-        # Update the  instance
-        instance.url = validated_data['url']
-        instance.save()
-
-        return instance     
 
 class CompanySerializer_read(serializers.ModelSerializer):
-
+    company_name = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Company
-        fields = ('dev_name', 'email', 'city', 'country', 'description','url','api_key')
-        # fields = '__all__'
- 
+        fields = ('dev_name', 'email', 'city', 'country', 'description', 'company_name')
