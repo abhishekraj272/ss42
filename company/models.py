@@ -11,6 +11,9 @@ class Company(models.Model):
     country = models.CharField(max_length=255, null=False)
     description = models.TextField(max_length=1024, null=False)
     api_key = models.TextField(max_length=1024, null=True)
+    url=models.TextField(null=True,blank=True)
+    ipadress=models.TextField(null=True,blank=True)
+
     # timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
