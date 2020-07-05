@@ -97,7 +97,7 @@ INSTALLED_APPS = [
    'oauth2_provider',
     'social_django',
     'rest_framework_social_oauth2',
-
+    'drf_multiple_model',
 ]
 TEMPLATE_CONTEXT_PROCESSORS = (
 
@@ -168,12 +168,21 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 100000000
 
 #
 
+#DATABASES = {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
+#}
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql_psycopg2',
+       'NAME': 'ss',
+       'USER': 'postgres',
+       'PASSWORD': 'qwerty31',
+       'HOST': 'localhost',
+        'PORT': '',
     }
-}
+ }
 #
 # DATABASES = {
 #   'default': {

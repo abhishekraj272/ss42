@@ -38,7 +38,7 @@ router.register(r'mtags', views.SortedMessageViewSet, Message)
 router.register(r'itags', views.SortedImageViewSet, Img)
 # router.register(r'ratings', views.RatingViewSet)
 # router.register(r'users', views.UserViewSet)
-
+router.register(r'search',views.SearchViewSet, basename="Search")
 
 # router.register(r'users', views.UserViewSet)
 # router = routers.DefaultRouter()
