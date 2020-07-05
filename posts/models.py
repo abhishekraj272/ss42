@@ -21,6 +21,7 @@ class PostAdvertisment(models.Model):
     advertizing_content= models.TextField(null =True ,blank=True)
     def __str__(self):
         return f'{self.title}'
+
 class Post(models.Model):
 
     # created_at=models.DateTimeField(efault=datetime.now, blank=True)
@@ -43,8 +44,6 @@ class Post(models.Model):
     genuine = models.ManyToManyField(settings.AUTH_USER_MODEL , blank=True, related_name="post_genuines")
     spam = models.ManyToManyField(settings.AUTH_USER_MODEL , blank=True, related_name="post_spames")
     advertisement=models.ForeignKey(PostAdvertisment,on_delete=models.CASCADE,null=True,blank=True,related_name="postadvertisement")
-
-
 
 
     def __str__(self):

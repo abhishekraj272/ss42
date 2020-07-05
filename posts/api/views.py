@@ -465,9 +465,9 @@ class PostViewSet(viewsets.ModelViewSet,mixins.UpdateModelMixin):
     # def update(self, instance, validated_data):
     #     # Update the  instance
     #     instance.review = validated_data['review']
-    #     instance.save()       
+    #     instance.save()
     # def put(self, request, *args, **kwargs):
-    #     return self.update(request, *args, **kwargs)       
+    #     return self.update(request, *args, **kwargs)
     # def put(self, request, pk, format=None):
     #     snippet = Post.objects.get(pk)
     #     serializer = PostSerializer(snippet, data=request.data)
@@ -724,3 +724,47 @@ def api_delete(request,pk):
         else:
             print("noot correct")
         return Response(serializer.data)
+
+from drf_multiple_model.viewsets import ObjectMultipleModelAPIViewSet
+from drf_multiple_model.pagination import MultipleModelLimitOffsetPagination
+
+class LimitPagination(MultipleModelLimitOffsetPagination):
+    default_limit = 50
+
+from django.db.models import Q
+def Post_search(queryset, request, *args, **kwargs):
+    query = request.GET.get('q',None)
+    if query is not None:
+        or_lookup = (Q(title__icontains=query) |
+                     Q(content__icontains=query)|
+                     Q(review__icontains=query)|
+                     Q(url__icontains=query)|
+                     Q(tags__name__in=[query])|
+                     Q(comments__content__icontains=query)
+                    )
+        queryset = queryset.filter(or_lookup).distinct() # distinct() is often necessary with Q lookups
+    return queryset
+
+def Msg_search(queryset, request, *args, **kwargs):
+    query = request.GET.get('q',None)
+    if query is not None:
+        or_lookup = (Q(title__icontains=query) |
+                     Q(content__icontains=query)|
+                     Q(review__icontains=query)|
+                     Q(tags__name__in=[query])
+                     )
+        queryset = queryset.filter(or_lookup).distinct() # distinct() is often necessary with Q lookups
+    return queryset
+
+class SearchViewSet(ObjectMultipleModelAPIViewSet):
+    close_old_connections()
+    pagination_class = LimitPagination
+
+    permission_classes =[IsAuthenticatedOrReadOnly,IsAuthorOrReadOnly]
+    authentication_classes =(TokenAuthentication,JSONWebTokenAuthentication)
+    http_method_names = ['get']
+
+    querylist = (
+    {'queryset':Post.objects.all(),'serializer_class': PostSerializer_read, 'filter_fn': Post_search},
+    {'queryset':Message.objects.all(),'serializer_class': MsgSerializer_read, 'filter_fn': Msg_search},
+    )
