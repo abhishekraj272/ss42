@@ -39,8 +39,29 @@ class CompanyRead(viewsets.ModelViewSet):
     #     company = APIKey.objects.get_from_key(key)
     #     return Response({ "detail": "Method \"GET\" not allowed..." }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+class CompanyUpdate(viewsets.ModelViewSet):
+    permission_classes =[HasAPIKey, ]
+    authentication_classes =()
+    serializer_class = CompanySerializer
+    queryset = Company.objects.all()
+    http_method_names = ['put']
 
-class Company(viewsets.ModelViewSet,mixins.UpdateModelMixin,):
+    def update(self, request, *args, **kwargs):
+        company_id = self.request.data['id']
+        name = self.request.data['company_name']
+        company_ = Company.objects.get(id=company_id)
+        user_ = User.objects.get(username=company_.company_name)
+
+        apikey_ = APIKey.objects.get(name=company_.company_name)
+        apikey_.name = name
+        apikey_.save()
+
+        user_.username = name
+        user_.save()
+
+        return Response({"message": "Username updated !!"}, status=status.HTTP_200_OK)
+
+class CompanyView(viewsets.ModelViewSet,mixins.UpdateModelMixin,):
     permission_classes =[]
     authentication_classes =()
     serializer_class = CompanySerializer
@@ -71,7 +92,7 @@ class Company(viewsets.ModelViewSet,mixins.UpdateModelMixin,):
             api_key, key = APIKey.objects.create_key(name=self.request.data['company_name'])
             self.request.data["api_key"] = str(key)
 
-            return super(Company, self).create(request)
+            return super(CompanyView, self).create(request)
         # serializer = self.get_serializer(data=request.data)
         # serializer = CompanySerializer(data=request.data)
         # serializer.is_valid(raise_exception=True)
@@ -83,16 +104,16 @@ class Company(viewsets.ModelViewSet,mixins.UpdateModelMixin,):
         company = User.objects.get(username=self.request.data["company_name"])
         serializer.save(company_name=company)
 
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)   
-    # def put(self, request, pk=None, format=None):
-    #     snippet  = Company.objects.filter(pk=pk)
-    #     serializer = CompanySerializer_read(snippet, data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
-        # return Response({"method":"put"})
+    # def put(self, request, *args, **kwargs):
+    #     return self.update(request, *args, **kwargs)   
+    # # def put(self, request, pk=None, format=None):
+    # #     snippet  = Company.objects.filter(pk=pk)
+    # #     serializer = CompanySerializer_read(snippet, data=request.data)
+    # #     if serializer.is_valid():
+    # #         serializer.save()
+    # #         return Response(serializer.data)
+    # #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+    #     # return Response({"method":"put"})
 class PostViewSet(viewsets.ModelViewSet):
     close_old_connections()
     queryset = Post.objects.all()
