@@ -44,22 +44,29 @@ class CompanyUpdate(viewsets.ModelViewSet):
     authentication_classes =()
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
-    http_method_names = ['put']
+    # http_method_names = ['put', 'patch']
 
-    def update(self, request, *args, **kwargs):
-        company_id = self.request.data['id']
-        name = self.request.data['company_name']
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        key = self.request.META['HTTP_API_KEY']
+        company_name = APIKey.objects.get_from_key(key)
+        company_id = self.kwargs['pk']
         company_ = Company.objects.get(id=company_id)
-        user_ = User.objects.get(username=company_.company_name)
+        if company_.company_name.username == company_name.name:
+            try: 
+                name = self.request.data['company_name']
+                user_ = User.objects.get(username=company_.company_name)
+                apikey_ = APIKey.objects.get(name=company_.company_name)
+                apikey_.name = name
+                apikey_.save()
+                user_.username = name
+                user_.save()
+            except: 
+                pass
+            return self.update(request, *args, **kwargs)
+        else:
+            return Response({ "message": "Please try with correct API Key !!" })
 
-        apikey_ = APIKey.objects.get(name=company_.company_name)
-        apikey_.name = name
-        apikey_.save()
-
-        user_.username = name
-        user_.save()
-
-        return Response({"message": "Username updated !!"}, status=status.HTTP_200_OK)
 
 class CompanyView(viewsets.ModelViewSet,mixins.UpdateModelMixin,):
     permission_classes =[]
@@ -85,7 +92,6 @@ class CompanyView(viewsets.ModelViewSet,mixins.UpdateModelMixin,):
                 self.request.data["api_key"] = self.queryset.filter(company_name=company_obj)[0].api_key
                 return Response({"message": "Already registered"}, status=status.HTTP_200_OK)
         else:
-            print("Entered else")
             company = User.objects.create(username=self.request.data["company_name"])  
             company.set_password(self.request.data["password"])
             company.save()
@@ -104,16 +110,6 @@ class CompanyView(viewsets.ModelViewSet,mixins.UpdateModelMixin,):
         company = User.objects.get(username=self.request.data["company_name"])
         serializer.save(company_name=company)
 
-    # def put(self, request, *args, **kwargs):
-    #     return self.update(request, *args, **kwargs)   
-    # # def put(self, request, pk=None, format=None):
-    # #     snippet  = Company.objects.filter(pk=pk)
-    # #     serializer = CompanySerializer_read(snippet, data=request.data)
-    # #     if serializer.is_valid():
-    # #         serializer.save()
-    # #         return Response(serializer.data)
-    # #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
-    #     # return Response({"method":"put"})
 class PostViewSet(viewsets.ModelViewSet):
     close_old_connections()
     queryset = Post.objects.all()
