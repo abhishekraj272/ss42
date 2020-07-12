@@ -24,7 +24,8 @@ from django.contrib.auth.models import User
 from developer.models import Developers
 from posts.models import Post
 from rest_framework import mixins
-
+from simple_search import search_filter
+from django.core.serializers import serialize
 from rest_framework.authentication import TokenAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.db import close_old_connections
@@ -33,7 +34,7 @@ from rest_framework import status
 from rest_framework.parsers import FileUploadParser
 from django.http import HttpResponse, JsonResponse
 from objects.models import Profile
-
+import json
 from rest_framework_api_key.permissions import HasAPIKey  # Permission for API Key check
 from django.views.decorators.csrf import csrf_exempt
 
@@ -418,19 +419,20 @@ class CommentViewSet(viewsets.ModelViewSet):
         post.comments.add(comment)
         post.save()
 
-class ForServicePostViewSet(viewsets.ModelViewSet):
-    close_old_connections()
-    queryset = Post.objects.all()
-
-    search_fields = ['url']
-
-    # search_fields = ('url','tags','review')
-    serializer_class = PostSerializer_read
-    http_method_names = ['get']
-    filter_backends = (filters.SearchFilter,)
+class ForServicePostViewSet(APIView):
     permission_classes =[IsAuthorOrReadOnly,IsAuthenticatedOrReadOnly]
     authentication_classes =(TokenAuthentication,JSONWebTokenAuthentication)
-    close_old_connections()
+    
+    def get(self, request):
+        search_fields = ['url']
+
+        query = request.GET['search']
+
+        posts = Post.objects.filter(search_filter(search_fields, query))
+        serializer = serializers.PostSerializer_read(posts, many=True)
+        print(serializer)
+        return Response(serializer.data)
+
 
 
 class PostViewSet(viewsets.ModelViewSet,mixins.UpdateModelMixin):

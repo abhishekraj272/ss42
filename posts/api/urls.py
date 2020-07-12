@@ -24,7 +24,7 @@ router.register(r'post/<int:pk>/',views.PostViewSet)
 router.register(r'msg', views.MsgViewSet)
 router.register(r'img', views.ImgViewSet)
 
-router.register(r'service/post', views.ForServicePostViewSet)
+# router.register(r'service/post', views.ForServicePostViewSet)
 router.register(r'service/msg', views.ForServiceMsgViewSet)
 router.register(r'service/img', views.ForServiceImgViewSet)
 
@@ -54,6 +54,7 @@ urlpatterns = [
     path('post/vote/<int:pid>/<int:uid>/<str:query>', views.vote_post),
     path('img/vote/<int:pid>/<int:uid>/<str:query>', views.vote_img),
     path('msg/vote/<int:pid>/<int:uid>/<str:query>', views.vote_msg),
+    path('service/post/', views.ForServicePostViewSet.as_view())
     # url(r'^nice/(?P<id>\d+)$',userView.as_view(),name='username'),
 
 
