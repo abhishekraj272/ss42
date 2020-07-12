@@ -2,19 +2,14 @@ from rest_framework import serializers
 from company.models import Company
 
 class CompanySerializer(serializers.ModelSerializer):
-
+    company_name = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Company
-        fields = ('id', 'dev_name', 'email', 'city', 'country', 'description', 'password')
-        # fields = '__all__'
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
-
+        # fields = ('company_name', 'dev_name', 'email', 'city', 'country', 'description', 'company_name', 'api_key')
+        fields = '__all__'
 
 class CompanySerializer_read(serializers.ModelSerializer):
-
+    company_name = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Company
-        fields = ('dev_name', 'email', 'city', 'country', 'description')
-        # fields = '__all__'
+        fields = ('dev_name', 'email', 'city', 'country', 'description', 'company_name')

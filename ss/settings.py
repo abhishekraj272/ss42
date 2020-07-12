@@ -24,14 +24,15 @@ import datetime
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CORS_ORIGIN_WHITELIST = [
-# 'localhost:4200',
-    'https://scrapshut.firebaseapp.com',
-    'http://localhost:4200',
-    'http://localhost:8000',
-    'https://wiringbridge.com',
-]
-
+# CORS_ORIGIN_WHITELIST = [
+# # 'localhost:4200',
+#     'https://scrapshut.firebaseapp.com',
+#     'http://localhost:4200',
+#     'http://localhost:8000',
+#     'https://wiringbridge.com',
+# ]
+CORS_ORIGIN_ALLOW_ALL=True
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = (
         'x-requested-with',
         'content-type',
@@ -40,7 +41,8 @@ CORS_ALLOW_HEADERS = (
         'authorization',
         'x-csrftoken',
         'api-key',
-        'API-KEY'
+        'API-KEY',
+        'Access-Control-Allow-Origin',
 )
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -95,7 +97,7 @@ INSTALLED_APPS = [
    'oauth2_provider',
     'social_django',
     'rest_framework_social_oauth2',
-
+    'drf_multiple_model',
 ]
 TEMPLATE_CONTEXT_PROCESSORS = (
 
@@ -104,8 +106,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsPostCsrfMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -148,7 +150,7 @@ WSGI_APPLICATION = 'ss.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-#
+
 DATABASES = {
        'default': {
            'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -161,10 +163,6 @@ DATABASES = {
 
        }
    }
-# # DATA_UPLOAD_MAX_NUMBER_FIELDS = 100240 # higher than the count of fields
-DATA_UPLOAD_MAX_MEMORY_SIZE = 100000000
-
-#
 
 # DATABASES = {
 #     'default': {
@@ -172,13 +170,34 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 100000000
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
+# # DATA_UPLOAD_MAX_NUMBER_FIELDS = 100240 # higher than the count of fields
+DATA_UPLOAD_MAX_MEMORY_SIZE = 100000000
+
+#
+
+#DATABASES = {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
+#}
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': 'ss',
+#        'USER': 'postgres',
+#        'PASSWORD': 'qwerty31',
+#        'HOST': 'localhost',
+#         'PORT': '',
+#     }
+#  }
 #
 # DATABASES = {
 #   'default': {
 #       'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #       'NAME': 'postgres',
 #       'USER': 'postgres',
-#       'PASSWORD': '',
+#       'PASSWORD': 'mynameisFB1987',
 #       'HOST': 'localhost',
 #        'PORT': '',
 #    }
@@ -391,5 +410,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'email-smtp.ap-south-1.amazonaws.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'AKIAZ2L3GYCDLZHOOO4K'
-EMAIL_HOST_PASSWORD = 'BFP1tNN0GDoST9HEwAhhf2Wkk1+SkQ87F3+PP2bjKTaH'
+EMAIL_HOST_USER = 'pythonautomail1@gmail.com'
+EMAIL_HOST_PASSWORD = 'qwerty1uiop'
